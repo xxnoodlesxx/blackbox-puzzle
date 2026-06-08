@@ -257,6 +257,54 @@ function render() {
   }
 }
 
+// ── Startscreen ──────────────────────────────────────────
+function renderStart() {
+  document.getElementById('view-start').innerHTML = `
+    <div class="start-card slide-in">
+      <div class="start-title">◈ AI ESCAPE ROOM</div>
+      <div class="start-subtitle">MISSION BRIEFING</div>
+      <p class="instructions" style="text-align:left;margin-bottom:28px">
+        4 Challenges. KI-Wissen gefragt. Wer löst die Mission am schnellsten?<br><br>
+        Gebt euren Teamnamen ein und startet die Mission.
+      </p>
+      <div class="section-label" style="text-align:left;margin-bottom:8px">Team-Bezeichnung</div>
+      <input
+        id="team-name-input"
+        class="input-field"
+        type="text"
+        placeholder="z.B. Team Alpha"
+        maxlength="30"
+        style="margin-bottom:20px"
+        autocomplete="off"
+      />
+      <button id="start-btn" class="btn btn-primary btn-full" disabled>
+        ▶&nbsp; MISSION STARTEN
+      </button>
+    </div>
+  `;
+
+  const input = document.getElementById('team-name-input');
+  const btn   = document.getElementById('start-btn');
+
+  input.addEventListener('input', () => {
+    btn.disabled = input.value.trim().length === 0;
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !btn.disabled) startMission();
+  });
+
+  btn.addEventListener('click', startMission);
+
+  function startMission() {
+    const name = input.value.trim();
+    if (!name) return;
+    initFreshState(name);
+    startTimer();
+    render();
+  }
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
