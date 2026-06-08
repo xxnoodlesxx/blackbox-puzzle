@@ -923,6 +923,7 @@ function initBgCanvas() {
     if (state.finalScore !== null && state.finalScore !== undefined) {
       return Math.min(1, state.finalScore / ESCAPE_ROOM_CONFIG.scoring.startPoints);
     }
+    if (state.phase === 'end') return 1;
     return Math.min(1, calculateScore() / ESCAPE_ROOM_CONFIG.scoring.startPoints);
   }
 
@@ -960,7 +961,7 @@ function initBgCanvas() {
       ctx.fill();
       const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, 8);
       grad.addColorStop(0, color);
-      grad.addColorStop(1, 'transparent');
+      grad.addColorStop(1, color.replace('rgb(', 'rgba(').replace(')', ',0)'));
       ctx.globalAlpha = glow * 0.15;
       ctx.beginPath();
       ctx.arc(nx, ny, 8, 0, Math.PI * 2);
