@@ -387,6 +387,54 @@ function difficultyBadge(difficulty) {
   return `<span class="badge badge-${cls}">${difficulty.toUpperCase()}</span>`;
 }
 
+// ── Navigation ───────────────────────────────────────────
+function advanceStage() {
+  const ch = getCurrentChallenge();
+  const now = Date.now();
+
+  // Check if there's a next sub-level/round within this challenge
+  if (ch.type === 'jailbreak' && state.currentSubIndex < ch.levels.length - 1) {
+    setState({ currentSubIndex: state.currentSubIndex + 1, stageEnteredTime: now, hintShownForStage: false });
+    renderGame();
+    return;
+  }
+  if (ch.type === 'deepfake' && state.currentSubIndex < ch.rounds.length - 1) {
+    setState({ currentSubIndex: state.currentSubIndex + 1, stageEnteredTime: now, hintShownForStage: false });
+    renderGame();
+    return;
+  }
+
+  // Advance to next challenge
+  const nextIndex = state.currentChallengeIndex + 1;
+  if (nextIndex < ESCAPE_ROOM_CONFIG.challenges.length) {
+    setState({ currentChallengeIndex: nextIndex, currentSubIndex: 0, stageEnteredTime: now, hintShownForStage: false });
+    renderGame();
+    return;
+  }
+
+  // All challenges complete → end
+  finishGame();
+}
+
+// ── Score Engine ─────────────────────────────────────────
+function applyError() {
+  setState({ totalErrors: state.totalErrors + 1 });
+}
+
+function finishGame() {
+  stopTimer();
+  const elapsed = Math.floor((Date.now() - state.globalStartTime) / 1000);
+  const score   = calculateScore();
+  setState({
+    phase: 'end',
+    finalTime: elapsed,
+    finalErrors: state.totalErrors,
+    finalHintsUsed: state.hintsUsed,
+    finalScore: score,
+  });
+  render();
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
