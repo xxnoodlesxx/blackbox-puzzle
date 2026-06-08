@@ -63,14 +63,14 @@ const ESCAPE_ROOM_CONFIG = {
     // ── Challenge 2 ────────────────────────────────────────
     {
       id: 'c2',
-      title: 'Der chinesische Funkspruch',
-      instructions: 'Ihr empfangt einen verschlüsselten KI-generierten Song auf Mandarin. Nutzt KI-Tools (Whisper, ChatGPT Voice oder ähnliche) um den Song zu transkribieren und ins Deutsche zu übersetzen. Im übersetzten Liedtext verstecken sich Zahlen — gebt sie in der korrekten Reihenfolge als zusammenhängenden Code ein.',
+      title: 'Der falsch archivierte CEO-Auftritt',
+      instructions: 'Praktikant KIRA-7 hat die Jahresrede von CEO Dr. Helga Brandt versehentlich in einen chinesischen Song umgewandelt und als verschlüsseltes Archiv gespeichert. Eure Aufgabe:\n\n1. Hört den Song an und ladet ihn herunter.\n2. Transkribiert den chinesischen Text — kostenlos z.B. mit Whisper auf huggingface.co oder openai.com/research/whisper.\n3. Übersetzt das Transkript mit ChatGPT oder Claude ins Deutsche — ihr erhaltet die echte CEO-Rede.\n4. Sucht in der Rede nach ausgeschriebenen Zahlen und gebt sie der Reihe nach als Code ein.\n\nBonus: Erstellt den Song mit den übersetzten Lyrics in Suno neu!',
       type: 'audio',
       audioSrc: 'assets/audio/challenge2.mp3',
       solution: '385',
       hints: [
-        'Der Code steckt im Liedtext — aber nicht als Ziffern geschrieben.',
-        'Lasst den Text ins Deutsche übersetzen und sucht nach ausgeschriebenen Zahlwörtern in der Reihenfolge ihres Auftretens.',
+        'Der Code steckt nicht als Ziffern im Song — lasst den übersetzten Text nach ausgeschriebenen Zahlwörtern durchsuchen.',
+        'Whisper-Tipp: Ladet die MP3 herunter und gebt sie auf huggingface.co/openai/whisper ein. Das Transkript direkt in ChatGPT einfügen und übersetzen lassen.',
       ],
     },
 
