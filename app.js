@@ -878,10 +878,12 @@ function copyResults() {
 // ── Background Canvas Animation ──────────────────────────
 function initBgCanvas() {
   const canvas = document.getElementById('bg-canvas');
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const CELL = 40;
   let nodes = [];
   let offset = 0;
+  let offsetY = 0;
 
   function resize() {
     canvas.width  = window.innerWidth;
@@ -929,7 +931,8 @@ function initBgCanvas() {
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    offset = (offset + 0.3) % CELL;
+    offset  = (offset  + 0.3) % CELL;
+    offsetY = (offsetY + 0.15) % CELL;
     const t = Date.now() / 1000;
     const ratio = getScoreRatio();
     const color = scoreColor(ratio);
@@ -941,7 +944,7 @@ function initBgCanvas() {
     for (let x = -CELL + offset; x <= w + CELL; x += CELL) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
     }
-    for (let y = 0; y < h; y += CELL) {
+    for (let y = -CELL + offsetY; y <= h + CELL; y += CELL) {
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
     }
 
@@ -949,17 +952,18 @@ function initBgCanvas() {
     nodes.forEach(n => {
       const glow = 0.4 + 0.6 * (0.5 + 0.5 * Math.sin(t * n.speed + n.phase));
       const nx = n.x + offset;
+      const ny = n.y + offsetY;
       ctx.globalAlpha = glow * 0.7;
       ctx.beginPath();
-      ctx.arc(nx, n.y, 2, 0, Math.PI * 2);
+      ctx.arc(nx, ny, 2, 0, Math.PI * 2);
       ctx.fillStyle = color;
       ctx.fill();
-      const grad = ctx.createRadialGradient(nx, n.y, 0, nx, n.y, 8);
+      const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, 8);
       grad.addColorStop(0, color);
       grad.addColorStop(1, 'transparent');
       ctx.globalAlpha = glow * 0.15;
       ctx.beginPath();
-      ctx.arc(nx, n.y, 8, 0, Math.PI * 2);
+      ctx.arc(nx, ny, 8, 0, Math.PI * 2);
       ctx.fillStyle = grad;
       ctx.fill();
     });
