@@ -4,12 +4,12 @@ Interaktives Browser-Teamspiel für KI-Profis. 2–3 Teams lösen gleichzeitig a
 
 ## Challenges
 
-| # | Name | Thema |
-|---|------|-------|
-| 1 | Das Jailbreak-Dilemma | Prompt Injection auf 3 KI-Bots |
-| 2 | Der chinesische Funkspruch | Mandarin-Audio transkribieren & übersetzen |
-| 3 | Der Deepfake-Detektiv | KI-generierte Bilder erkennen |
-| 4 | Der Halluzinations-Code | Falsche Jahreszahlen in KI-Bericht finden |
+| # | Name | Was euch erwartet |
+|---|------|-------------------|
+| 1 | Das Jailbreak-Dilemma | Bringt drei KI-Bots mit zunehmend strikten Sicherheitsmechanismen dazu, ihr Geheimnis preiszugeben. |
+| 2 | Der chinesische Funkspruch | Ihr empfangt eine verschlüsselte KI-Botschaft — entschlüsselt sie mithilfe von KI-Tools. |
+| 3 | Der Deepfake-Detektiv | Drei Bilderrunden, steigende Schwierigkeit — findet das KI-generierte Bild, bevor euch die Fehlerpunkte einholen. |
+| 4 | Der Halluzinations-Code | Ein langer KI-generierter Bericht enthält bewusst eingebaute Fehler. Findet sie — aber lest ihn nicht manuell. |
 
 ## Tech Stack
 
