@@ -208,6 +208,7 @@ audio {
 .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
 
 /* ── Startscreen ────────────────────────────────────────── */
+#view-setup,
 #view-start {
   min-height: 100vh;
   display: flex;
