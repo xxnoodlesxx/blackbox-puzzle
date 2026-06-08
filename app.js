@@ -757,6 +757,78 @@ function renderPdf(ch) {
   }
 }
 
+// ── Endscreen ────────────────────────────────────────────
+function renderEnd() {
+  const mins = Math.floor(state.finalTime / 60).toString().padStart(2, '0');
+  const secs = (state.finalTime % 60).toString().padStart(2, '0');
+  const timeStr  = `${mins}:${secs} min`;
+  const scoreStr = state.finalScore.toLocaleString('de-CH');
+
+  document.getElementById('view-end').innerHTML = `
+    <div class="end-card slide-in">
+      <pre class="ascii-art">
+ ███▄ ▄███▓ ██▓  ██████   ██████  ██▓ ▒█████   ███▄    █
+▓██▒▀█▀ ██▒▓██▒▒██    ▒ ▒██    ▒ ▓██▒▒██▒  ██▒ ██ ▀█   █
+▓██    ▓██░▒██▒░ ▓██▄   ░ ▓██▄   ▒██▒▒██░  ██▒▓██  ▀█ ██▒
+▒██    ▒██ ░██░  ▒   ██▒  ▒   ██▒░██░▒██   ██░▓██▒  ▐▌██▒
+▒██▒   ░██▒░██░▒██████▒▒▒██████▒▒░██░░ ████▓▒░▒██░   ▓██░
+░ ▒░   ░  ░░▓  ▒ ▒▓▒ ▒ ░▒ ▒▓▒ ▒ ░░▓  ░ ▒░▒░▒░ ░ ▒░   ▒ ▒
+░  ░      ░ ▒ ░░ ░▒  ░ ░░ ░▒  ░ ░ ▒ ░  ░ ░ ▒░ ░ ░░   ░ ▒░
+░      ░    ▒ ░░  ░  ░  ░  ░  ░   ▒ ░░ ░ ░ ▒     ░   ░ ░
+       ░    ░        ░        ░   ░      ░ ░           ░ </pre>
+
+      <div class="end-team">COMPLETE &nbsp;·&nbsp; ${escHtml(state.teamName)}</div>
+
+      <div class="stats-block">
+        <div class="stat-row">
+          <span class="stat-label">⏱ GESAMTZEIT</span>
+          <span class="stat-value stat-time">${timeStr}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">✗ FEHLVERSUCHE</span>
+          <span class="stat-value stat-errors">${state.finalErrors}</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">👁 HINWEISE GENUTZT</span>
+          <span class="stat-value stat-hints">${state.finalHintsUsed}</span>
+        </div>
+        <div class="stat-row score-row">
+          <span class="stat-label">◈ FINALE PUNKTE</span>
+          <span class="stat-value stat-score">${scoreStr}</span>
+        </div>
+      </div>
+
+      <button id="copy-btn" class="btn btn-primary btn-full">
+        ⎘&nbsp; Ergebnis kopieren
+      </button>
+    </div>
+  `;
+
+  document.getElementById('copy-btn').addEventListener('click', copyResults);
+}
+
+function copyResults() {
+  const timeStr  = formatTime(state.finalTime);
+  const scoreStr = state.finalScore.toLocaleString('de-CH');
+  const text = [
+    '=== AI ESCAPE ROOM · ERGEBNIS ===',
+    `Team:           ${state.teamName}`,
+    `Gesamtzeit:     ${timeStr} min`,
+    `Fehlversuche:   ${state.finalErrors}`,
+    `Hinweise:       ${state.finalHintsUsed}`,
+    `Finale Punkte:  ${scoreStr}`,
+    '=================================',
+  ].join('\n');
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copy-btn');
+    btn.textContent = '✓ Kopiert!';
+    setTimeout(() => { btn.innerHTML = '⎘&nbsp; Ergebnis kopieren'; }, 2000);
+  }).catch(() => {
+    alert('Kopieren fehlgeschlagen. Bitte manuell kopieren:\n\n' + text);
+  });
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
