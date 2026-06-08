@@ -1,1 +1,323 @@
-/* Cyberpunk theme — filled in Task 2 */
+/* ── Variables ─────────────────────────────────────────── */
+:root {
+  --bg:        #0a0a0a;
+  --bg-card:   #0f1a0f;
+  --green:     #00ff41;
+  --cyan:      #00ffff;
+  --yellow:    #ffff00;
+  --red:       #ff4444;
+  --orange:    #ff8800;
+  --gray:      #888888;
+  --border:    rgba(0, 255, 65, 0.25);
+  --font:      'Courier New', 'Lucida Console', monospace;
+  --max-w:     800px;
+}
+
+/* ── Base ───────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--green);
+  font-family: var(--font);
+  min-height: 100vh;
+  background-image:
+    linear-gradient(rgba(0,255,65,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,65,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.hidden { display: none !important; }
+
+/* ── Container ──────────────────────────────────────────── */
+.container {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ── Header Bar ─────────────────────────────────────────── */
+#game-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10,10,10,0.95);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(4px);
+}
+.header-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 10px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.header-brand  { color: var(--green); font-size: 14px; letter-spacing: 2px; }
+.header-team   { color: var(--cyan);  font-size: 13px; }
+.header-timer  { color: var(--yellow); font-size: 18px; font-weight: bold; letter-spacing: 1px; }
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 24px;
+  margin: 20px auto;
+  max-width: var(--max-w);
+}
+
+/* ── Typography ─────────────────────────────────────────── */
+.challenge-title  { color: var(--cyan); font-size: 20px; margin-bottom: 4px; }
+.challenge-meta   { color: var(--gray); font-size: 12px; letter-spacing: 1px; margin-bottom: 16px; }
+.instructions     { color: #cccccc; font-size: 14px; line-height: 1.7; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
+.section-label    { color: var(--gray); font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+
+/* ── Inputs & Buttons ───────────────────────────────────── */
+.input-field {
+  width: 100%;
+  background: #111;
+  border: 1px solid rgba(0,255,65,0.3);
+  color: var(--green);
+  font-family: var(--font);
+  font-size: 16px;
+  padding: 10px 14px;
+  outline: none;
+  border-radius: 2px;
+  transition: border-color 0.2s;
+}
+.input-field:focus   { border-color: var(--green); }
+.input-field.error   { border-color: var(--red); animation: flash-red 0.4s; }
+.input-field.success { border-color: var(--green); }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 24px;
+  border: 1px solid;
+  font-family: var(--font);
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  border-radius: 2px;
+  letter-spacing: 1px;
+}
+.btn-primary   { background: rgba(0,255,65,0.1); border-color: var(--green); color: var(--green); }
+.btn-primary:hover  { background: rgba(0,255,65,0.2); }
+.btn-primary:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-danger    { background: rgba(255,68,68,0.1); border-color: var(--red); color: var(--red); }
+.btn-cyan      { background: rgba(0,255,255,0.1); border-color: var(--cyan); color: var(--cyan); }
+.btn-cyan:hover     { background: rgba(0,255,255,0.2); }
+.btn-full      { width: 100%; justify-content: center; }
+
+/* ── Audio Player ───────────────────────────────────────── */
+audio {
+  width: 100%;
+  filter: invert(1) hue-rotate(90deg);
+  margin-bottom: 8px;
+}
+.download-link {
+  color: var(--cyan);
+  font-size: 13px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.download-link:hover { text-decoration: underline; }
+
+/* ── Image Grid (Challenge 3) ───────────────────────────── */
+.image-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.image-tile {
+  border: 2px solid #333;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s;
+  position: relative;
+}
+.image-tile:hover    { border-color: rgba(0,255,65,0.5); transform: scale(1.01); }
+.image-tile.selected { border-color: var(--cyan); }
+.image-tile.wrong    { border-color: var(--red); animation: flash-red 0.5s; }
+.image-tile.correct  { border-color: var(--green); }
+.image-tile img      { width: 100%; height: 200px; object-fit: cover; display: block; }
+.image-tile .tile-label {
+  text-align: center;
+  padding: 6px;
+  font-size: 12px;
+  color: var(--gray);
+  background: #111;
+}
+.image-tile.selected .tile-label { color: var(--cyan); }
+
+/* ── Hint ───────────────────────────────────────────────── */
+#hint-area {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 16px 20px;
+  min-height: 60px;
+}
+.hint-btn {
+  background: transparent;
+  border: 1px solid rgba(255,136,0,0.4);
+  color: var(--orange);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 2px;
+  animation: pulse 2s infinite;
+}
+.hint-text {
+  background: rgba(255,136,0,0.08);
+  border: 1px solid rgba(255,136,0,0.3);
+  color: var(--orange);
+  padding: 12px 16px;
+  font-size: 13px;
+  line-height: 1.6;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+/* ── Modal ──────────────────────────────────────────────── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #111;
+  border: 1px solid var(--border);
+  padding: 28px 32px;
+  max-width: 420px;
+  width: 90%;
+  border-radius: 4px;
+}
+.modal-title   { color: var(--cyan); font-size: 16px; margin-bottom: 12px; }
+.modal-body    { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
+/* ── Startscreen ────────────────────────────────────────── */
+#view-start {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.start-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 480px;
+  text-align: center;
+}
+.start-title {
+  font-size: 32px;
+  color: var(--green);
+  letter-spacing: 6px;
+  margin-bottom: 8px;
+  text-shadow: 0 0 20px rgba(0,255,65,0.5);
+}
+.start-subtitle { color: var(--gray); font-size: 13px; letter-spacing: 2px; margin-bottom: 36px; }
+
+/* ── Endscreen ──────────────────────────────────────────── */
+#view-end {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.end-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 40px;
+  width: 100%;
+  max-width: 560px;
+  text-align: center;
+}
+.ascii-art {
+  color: var(--green);
+  font-size: 13px;
+  line-height: 1.3;
+  margin-bottom: 8px;
+  text-shadow: 0 0 10px rgba(0,255,65,0.4);
+  white-space: pre;
+}
+.end-team     { color: var(--cyan); font-size: 14px; letter-spacing: 2px; margin-bottom: 28px; }
+.stats-block  { text-align: left; margin-bottom: 24px; }
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(0,255,65,0.1);
+  font-size: 14px;
+}
+.stat-label  { color: var(--gray); }
+.stat-value  { font-size: 18px; font-weight: bold; }
+.stat-time   { color: var(--yellow); }
+.stat-errors { color: var(--red); }
+.stat-hints  { color: var(--orange); }
+.stat-score  { color: var(--green); font-size: 24px !important; }
+.stat-row.score-row { border-bottom: none; padding-top: 16px; }
+
+/* ── Animations ─────────────────────────────────────────── */
+@keyframes flash-red {
+  0%, 100% { background: transparent; }
+  50%       { background: rgba(255,68,68,0.2); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; box-shadow: none; }
+  50%       { opacity: 0.7; box-shadow: 0 0 8px rgba(255,136,0,0.4); }
+}
+@keyframes slide-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.slide-in { animation: slide-in 0.3s ease forwards; }
+
+/* ── Progress Bar ───────────────────────────────────────── */
+.progress-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 20px;
+}
+.progress-dot {
+  flex: 1;
+  height: 3px;
+  background: #333;
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+.progress-dot.done    { background: var(--green); }
+.progress-dot.current { background: var(--cyan); animation: pulse 1.5s infinite; }
+
+/* ── Difficulty Badge ───────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 2px 8px;
+  font-size: 10px;
+  letter-spacing: 1px;
+  border-radius: 2px;
+  border: 1px solid;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.badge-easy   { color: var(--green);  border-color: var(--green);  background: rgba(0,255,65,0.1); }
+.badge-medium { color: var(--yellow); border-color: var(--yellow); background: rgba(255,255,0,0.1); }
+.badge-hard   { color: var(--red);    border-color: var(--red);    background: rgba(255,68,68,0.1); }
