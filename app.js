@@ -435,6 +435,51 @@ function finishGame() {
   render();
 }
 
+// ── Hints ────────────────────────────────────────────────
+function checkHintUnlock() {
+  if (!state.stageEnteredTime || state.hintShownForStage) return;
+  const elapsed = Date.now() - state.stageEnteredTime;
+  if (elapsed >= ESCAPE_ROOM_CONFIG.scoring.hintUnlockSeconds * 1000) {
+    showHintButton();
+  }
+}
+
+function showHintButton() {
+  const area = document.getElementById('hint-area');
+  if (!area || area.querySelector('.hint-btn')) return; // already shown
+  const ch  = getCurrentChallenge();
+  const sub = getCurrentSub();
+  const hintText = sub?.hint || ch.hint || '';
+  if (!hintText) return;
+
+  area.innerHTML = `
+    <button class="hint-btn" id="hint-unlock-btn">
+      👁&nbsp; Hinweis freischalten?
+    </button>
+  `;
+  document.getElementById('hint-unlock-btn').addEventListener('click', () => {
+    showModal(`
+      <div class="modal-box">
+        <div class="modal-title">⚠ Hinweis freischalten?</div>
+        <div class="modal-body">
+          Sicher? Das Aufdecken dieses Hinweises kostet euer Team sofort
+          <strong style="color:var(--orange)">${ESCAPE_ROOM_CONFIG.scoring.hintPenalty} Punkte</strong>!
+        </div>
+        <div class="modal-actions">
+          <button class="btn btn-danger" data-cancel>Abbrechen</button>
+          <button class="btn btn-primary" data-confirm>Ja, Hinweis zeigen</button>
+        </div>
+      </div>
+    `, () => confirmHint(hintText));
+  });
+}
+
+function confirmHint(hintText) {
+  setState({ hintsUsed: state.hintsUsed + 1, hintShownForStage: true });
+  const area = document.getElementById('hint-area');
+  area.innerHTML = `<div class="hint-text">💡 ${escHtml(hintText)}</div>`;
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
