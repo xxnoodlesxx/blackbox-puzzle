@@ -8,7 +8,8 @@ const ESCAPE_ROOM_CONFIG = {
     timePenaltyPerSecond: 2,
     errorPenalty:         200,
     hintPenalty:          500,
-    hintUnlockSeconds:    10,
+    hint1UnlockSeconds:   300,
+    hint2UnlockSeconds:   600,
   },
 
   challenges: [
@@ -462,7 +463,9 @@ function finishGame() {
 function checkHintUnlock() {
   if (!state.stageEnteredTime || state.hintsShownForStage >= 2) return;
   const elapsed = Date.now() - state.stageEnteredTime;
-  if (elapsed >= ESCAPE_ROOM_CONFIG.scoring.hintUnlockSeconds * 1000) {
+  const cfg = ESCAPE_ROOM_CONFIG.scoring;
+  const threshold = state.hintsShownForStage === 0 ? cfg.hint1UnlockSeconds : cfg.hint2UnlockSeconds;
+  if (elapsed >= threshold * 1000) {
     showHintButton();
   }
 }
@@ -489,7 +492,9 @@ function renderHintArea() {
   // Show button for next hint if available and unlock time reached
   if (shown < hints.length) {
     const elapsed = state.stageEnteredTime ? Date.now() - state.stageEnteredTime : 0;
-    const unlocked = shown > 0 || elapsed >= ESCAPE_ROOM_CONFIG.scoring.hintUnlockSeconds * 1000;
+    const cfg = ESCAPE_ROOM_CONFIG.scoring;
+    const threshold = shown === 0 ? cfg.hint1UnlockSeconds : cfg.hint2UnlockSeconds;
+    const unlocked = elapsed >= threshold * 1000;
     if (unlocked) {
       html += `<button class="hint-btn" id="hint-unlock-btn" style="${shown > 0 ? 'margin-top:8px' : ''}">
         👁&nbsp; Hinweis ${shown + 1} freischalten?
