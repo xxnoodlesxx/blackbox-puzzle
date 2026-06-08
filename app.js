@@ -132,3 +132,52 @@ const ESCAPE_ROOM_CONFIG = {
 // ═══════════════════════════════════════════════════════════
 //  END OF CONFIGURATION
 // ═══════════════════════════════════════════════════════════
+
+// ── State ────────────────────────────────────────────────
+const STORAGE_KEY = 'escapeRoomState';
+
+let state = {};
+
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = JSON.parse(saved);
+  } catch (e) {
+    state = {};
+  }
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function setState(updates) {
+  state = { ...state, ...updates };
+  saveState();
+}
+
+function initFreshState(teamName) {
+  const now = Date.now();
+  state = {
+    teamName,
+    phase: 'game',
+    currentChallengeIndex: 0,
+    currentSubIndex: 0,
+    globalStartTime: now,
+    stageEnteredTime: now,
+    hintShownForStage: false,
+    totalErrors: 0,
+    hintsUsed: 0,
+    finalTime: null,
+    finalErrors: null,
+    finalHintsUsed: null,
+    finalScore: null,
+  };
+  saveState();
+}
+
+function resetGame() {
+  localStorage.removeItem(STORAGE_KEY);
+  state = {};
+  render();
+}
