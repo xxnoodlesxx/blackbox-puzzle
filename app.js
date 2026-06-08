@@ -305,6 +305,88 @@ function renderStart() {
   }
 }
 
+// ── Timer ────────────────────────────────────────────────
+let timerInterval = null;
+
+function startTimer() {
+  stopTimer();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function stopTimer() {
+  if (timerInterval) clearInterval(timerInterval);
+  timerInterval = null;
+}
+
+function tick() {
+  updateTimerDisplay();
+  checkHintUnlock();
+}
+
+function updateTimerDisplay() {
+  const el = document.getElementById('timer-display');
+  if (!el || !state.globalStartTime) return;
+  const elapsed = Math.floor((Date.now() - state.globalStartTime) / 1000);
+  el.textContent = '⏱ ' + formatTime(elapsed);
+}
+
+function resumeTimerIfNeeded() {
+  if (state.phase === 'game' && !timerInterval) startTimer();
+}
+
+// ── Game Shell ───────────────────────────────────────────
+function renderGame() {
+  // Header
+  document.getElementById('game-header').innerHTML = `
+    <div class="header-inner">
+      <span class="header-brand">◈ MISSION CONTROL</span>
+      <span class="header-team">${escHtml(state.teamName)}</span>
+      <span class="header-timer" id="timer-display">⏱ 00:00</span>
+    </div>
+  `;
+
+  // Challenge content
+  const ch = getCurrentChallenge();
+  renderChallenge(ch);
+
+  // Hint area reset
+  document.getElementById('hint-area').innerHTML = '';
+
+  updateTimerDisplay();
+  resumeTimerIfNeeded();
+}
+
+function renderChallenge(ch) {
+  if (ch.type === 'jailbreak') renderJailbreak(ch);
+  else if (ch.type === 'audio') renderAudio(ch);
+  else if (ch.type === 'deepfake') renderDeepfake(ch);
+  else if (ch.type === 'pdf') renderPdf(ch);
+}
+
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function buildProgressBar() {
+  const total = ESCAPE_ROOM_CONFIG.challenges.length;
+  const dots = Array.from({ length: total }, (_, i) => {
+    const cls = i < state.currentChallengeIndex ? 'done'
+              : i === state.currentChallengeIndex ? 'current' : '';
+    return `<div class="progress-dot ${cls}"></div>`;
+  }).join('');
+  return `<div class="progress-bar">${dots}</div>`;
+}
+
+function difficultyBadge(difficulty) {
+  if (!difficulty) return '';
+  const cls = difficulty.toLowerCase();
+  return `<span class="badge badge-${cls}">${difficulty.toUpperCase()}</span>`;
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
