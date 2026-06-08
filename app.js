@@ -181,3 +181,84 @@ function resetGame() {
   state = {};
   render();
 }
+
+// ── Utilities ────────────────────────────────────────────
+function formatTime(totalSeconds) {
+  const m = Math.floor(totalSeconds / 60).toString().padStart(2, '0');
+  const s = (totalSeconds % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function validateCode(input, solution) {
+  return input.trim().toUpperCase() === solution.trim().toUpperCase();
+}
+
+function validateYears(input, solutionArray) {
+  const entered = input.split(',').map(s => s.trim()).filter(Boolean).sort();
+  const expected = [...solutionArray].map(s => s.trim()).sort();
+  return JSON.stringify(entered) === JSON.stringify(expected);
+}
+
+function calculateScore() {
+  const cfg = ESCAPE_ROOM_CONFIG.scoring;
+  const elapsed = Math.floor((Date.now() - state.globalStartTime) / 1000);
+  const raw = cfg.startPoints
+    - elapsed * cfg.timePenaltyPerSecond
+    - state.totalErrors * cfg.errorPenalty
+    - state.hintsUsed * cfg.hintPenalty;
+  return Math.max(0, raw);
+}
+
+function getCurrentChallenge() {
+  return ESCAPE_ROOM_CONFIG.challenges[state.currentChallengeIndex];
+}
+
+function getCurrentSub() {
+  const ch = getCurrentChallenge();
+  if (ch.type === 'jailbreak') return ch.levels[state.currentSubIndex];
+  if (ch.type === 'deepfake')  return ch.rounds[state.currentSubIndex];
+  return null;
+}
+
+function showModal(html, onConfirm, onCancel) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'modal-backdrop';
+  backdrop.innerHTML = html;
+  document.body.appendChild(backdrop);
+  backdrop.querySelector('[data-confirm]')?.addEventListener('click', () => {
+    backdrop.remove();
+    onConfirm?.();
+  });
+  backdrop.querySelector('[data-cancel]')?.addEventListener('click', () => {
+    backdrop.remove();
+    onCancel?.();
+  });
+}
+
+// ── Router ───────────────────────────────────────────────
+function render() {
+  const start = document.getElementById('view-start');
+  const game  = document.getElementById('view-game');
+  const end   = document.getElementById('view-end');
+
+  start.classList.add('hidden');
+  game.classList.add('hidden');
+  end.classList.add('hidden');
+
+  if (!state.phase || state.phase === 'start') {
+    start.classList.remove('hidden');
+    renderStart();
+  } else if (state.phase === 'game') {
+    game.classList.remove('hidden');
+    renderGame();
+  } else if (state.phase === 'end') {
+    end.classList.remove('hidden');
+    renderEnd();
+  }
+}
+
+// ── Init ─────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  render();
+});
