@@ -261,7 +261,8 @@ function render() {
 function renderStart() {
   document.getElementById('view-start').innerHTML = `
     <div class="start-card slide-in">
-      <div class="start-title">◈ AI ESCAPE ROOM</div>
+      <div class="start-title">◈ BLACKBOX</div>
+      <div class="start-subtitle-brand">AI PUZZLE ROOM</div>
       <div class="start-subtitle">MISSION BRIEFING</div>
       <p class="instructions" style="text-align:left;margin-bottom:28px">
         4 Challenges. KI-Wissen gefragt. Wer löst die Mission am schnellsten?<br><br>
@@ -811,7 +812,7 @@ function copyResults() {
   const timeStr  = formatTime(state.finalTime);
   const scoreStr = state.finalScore.toLocaleString('de-CH');
   const text = [
-    '=== AI ESCAPE ROOM · ERGEBNIS ===',
+    '=== BLACKBOX · AI PUZZLE ROOM · ERGEBNIS ===',
     `Team:           ${state.teamName}`,
     `Gesamtzeit:     ${timeStr} min`,
     `Fehlversuche:   ${state.finalErrors}`,

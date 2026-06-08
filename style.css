@@ -231,6 +231,7 @@ audio {
   margin-bottom: 8px;
   text-shadow: 0 0 20px rgba(0,255,65,0.5);
 }
+.start-subtitle-brand { color: var(--cyan); font-size: 14px; letter-spacing: 4px; margin-bottom: 6px; }
 .start-subtitle { color: var(--gray); font-size: 13px; letter-spacing: 2px; margin-bottom: 36px; }
 
 /* ── Endscreen ──────────────────────────────────────────── */
