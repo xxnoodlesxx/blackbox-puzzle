@@ -480,6 +480,141 @@ function confirmHint(hintText) {
   area.innerHTML = `<div class="hint-text">💡 ${escHtml(hintText)}</div>`;
 }
 
+// ── Challenge 1: Jailbreak ───────────────────────────────
+function renderJailbreak(ch) {
+  const level = ch.levels[state.currentSubIndex];
+  const totalLevels = ch.levels.length;
+
+  document.getElementById('challenge-content').innerHTML = `
+    ${buildProgressBar()}
+    <div class="card slide-in">
+      <div class="challenge-meta">
+        CHALLENGE 1 / ${ESCAPE_ROOM_CONFIG.challenges.length} &nbsp;·&nbsp;
+        LEVEL ${state.currentSubIndex + 1} / ${totalLevels}
+      </div>
+      <div class="challenge-title">
+        ${escHtml(level.title)}
+        ${difficultyBadge(level.difficulty)}
+      </div>
+      <p class="instructions">${escHtml(level.instructions)}</p>
+
+      <div class="section-label" style="margin-bottom:10px">Bot-Link</div>
+      <a
+        href="${escHtml(level.botUrl)}"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-cyan"
+        style="display:inline-flex;margin-bottom:24px;text-decoration:none"
+      >
+        ↗&nbsp; Bot öffnen
+      </a>
+
+      <div class="section-label" style="margin-bottom:8px">Erbeuteter Code</div>
+      <input
+        id="code-input"
+        class="input-field"
+        type="text"
+        placeholder="Code eingeben..."
+        autocomplete="off"
+        style="margin-bottom:12px"
+      />
+      <div id="code-feedback" style="min-height:20px;font-size:13px;margin-bottom:12px"></div>
+      <button id="verify-btn" class="btn btn-primary btn-full">▶&nbsp; Verifizieren</button>
+    </div>
+  `;
+
+  const input    = document.getElementById('code-input');
+  const feedback = document.getElementById('code-feedback');
+
+  document.getElementById('verify-btn').addEventListener('click', () => submitCode());
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitCode(); });
+
+  function submitCode() {
+    const val = input.value;
+    if (!val.trim()) return;
+    if (validateCode(val, level.solution)) {
+      input.classList.add('success');
+      feedback.style.color = 'var(--green)';
+      feedback.textContent = '✓ Code korrekt! Nächste Stufe wird freigeschaltet...';
+      document.getElementById('verify-btn').disabled = true;
+      setTimeout(() => advanceStage(), 1000);
+    } else {
+      applyError();
+      input.classList.add('error');
+      feedback.style.color = 'var(--red)';
+      feedback.textContent = `✗ Falscher Code. -${ESCAPE_ROOM_CONFIG.scoring.errorPenalty} Punkte.`;
+      setTimeout(() => {
+        input.classList.remove('error');
+        feedback.textContent = '';
+      }, 1500);
+      input.value = '';
+    }
+  }
+}
+
+// ── Challenge 2: Audio ───────────────────────────────────
+function renderAudio(ch) {
+  document.getElementById('challenge-content').innerHTML = `
+    ${buildProgressBar()}
+    <div class="card slide-in">
+      <div class="challenge-meta">CHALLENGE 2 / ${ESCAPE_ROOM_CONFIG.challenges.length}</div>
+      <div class="challenge-title">${escHtml(ch.title)}</div>
+      <p class="instructions">${escHtml(ch.instructions)}</p>
+
+      <div class="section-label" style="margin-bottom:10px">Audiodatei</div>
+      <audio controls preload="metadata" style="margin-bottom:8px">
+        <source src="${escHtml(ch.audioSrc)}" type="audio/mpeg" />
+        Dein Browser unterstützt kein HTML5-Audio.
+      </audio>
+      <div style="margin-bottom:24px">
+        <a href="${escHtml(ch.audioSrc)}" download class="download-link">
+          ⬇&nbsp; Audio herunterladen
+        </a>
+      </div>
+
+      <div class="section-label" style="margin-bottom:8px">Versteckter Code</div>
+      <input
+        id="code-input"
+        class="input-field"
+        type="text"
+        placeholder="Code aus den Lyrics eingeben..."
+        autocomplete="off"
+        style="margin-bottom:12px"
+      />
+      <div id="code-feedback" style="min-height:20px;font-size:13px;margin-bottom:12px"></div>
+      <button id="verify-btn" class="btn btn-primary btn-full">▶&nbsp; Verifizieren</button>
+    </div>
+  `;
+
+  const input    = document.getElementById('code-input');
+  const feedback = document.getElementById('code-feedback');
+
+  document.getElementById('verify-btn').addEventListener('click', () => submitCode());
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitCode(); });
+
+  function submitCode() {
+    const val = input.value;
+    if (!val.trim()) return;
+    if (validateCode(val, ch.solution)) {
+      input.classList.add('success');
+      feedback.style.color = 'var(--green)';
+      feedback.textContent = '✓ Code korrekt! Challenge 3 wird freigeschaltet...';
+      document.getElementById('verify-btn').disabled = true;
+      setTimeout(() => advanceStage(), 1000);
+    } else {
+      applyError();
+      input.classList.add('error');
+      feedback.style.color = 'var(--red)';
+      feedback.textContent = `✗ Falscher Code. -${ESCAPE_ROOM_CONFIG.scoring.errorPenalty} Punkte.`;
+      setTimeout(() => {
+        input.classList.remove('error');
+        feedback.textContent = '';
+      }, 1500);
+      input.value = '';
+    }
+  }
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
