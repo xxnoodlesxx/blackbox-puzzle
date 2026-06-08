@@ -615,6 +615,148 @@ function renderAudio(ch) {
   }
 }
 
+// ── Challenge 3: Deepfake ────────────────────────────────
+function renderDeepfake(ch) {
+  const round = ch.rounds[state.currentSubIndex];
+  const totalRounds = ch.rounds.length;
+  let selectedId = null;
+
+  document.getElementById('challenge-content').innerHTML = `
+    ${buildProgressBar()}
+    <div class="card slide-in">
+      <div class="challenge-meta">
+        CHALLENGE 3 / ${ESCAPE_ROOM_CONFIG.challenges.length} &nbsp;·&nbsp;
+        RUNDE ${state.currentSubIndex + 1} / ${totalRounds}
+      </div>
+      <div class="challenge-title">
+        ${escHtml(round.title)}
+        ${difficultyBadge(round.difficulty)}
+      </div>
+      <p class="instructions">${escHtml(round.instructions)}</p>
+
+      <div class="image-grid" id="image-grid">
+        ${round.images.map(img => `
+          <div class="image-tile" data-id="${escHtml(img.id)}" onclick="selectImage('${escHtml(img.id)}')">
+            <img src="${escHtml(img.src)}" alt="${escHtml(img.label)}" draggable="false" />
+            <div class="tile-label">${escHtml(img.label)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div id="image-feedback" style="min-height:20px;font-size:13px;margin-bottom:12px"></div>
+      <button id="confirm-btn" class="btn btn-primary btn-full" disabled>
+        ✓&nbsp; Auswahl bestätigen
+      </button>
+    </div>
+  `;
+
+  document.getElementById('confirm-btn').addEventListener('click', () => confirmImageSelection(round));
+
+  window.selectImage = function(id) {
+    selectedId = id;
+    document.querySelectorAll('.image-tile').forEach(t => t.classList.remove('selected'));
+    document.querySelector(`.image-tile[data-id="${id}"]`)?.classList.add('selected');
+    document.getElementById('confirm-btn').disabled = false;
+    document.getElementById('image-feedback').textContent = '';
+  };
+
+  window.confirmImageSelection = function(round) {
+    if (!selectedId) return;
+    const btn = document.getElementById('confirm-btn');
+    const feedback = document.getElementById('image-feedback');
+
+    if (selectedId === round.solution) {
+      // Correct
+      document.querySelector(`.image-tile[data-id="${selectedId}"]`)?.classList.add('correct');
+      btn.disabled = true;
+      showModal(`
+        <div class="modal-box">
+          <div class="modal-title" style="color:var(--green)">✓ Richtig!</div>
+          <div class="modal-body">${escHtml(round.explanation)}</div>
+          <div class="modal-actions">
+            <button class="btn btn-primary" data-confirm>Weiter →</button>
+          </div>
+        </div>
+      `, () => advanceStage());
+    } else {
+      // Wrong
+      applyError();
+      const tile = document.querySelector(`.image-tile[data-id="${selectedId}"]`);
+      tile?.classList.remove('selected');
+      tile?.classList.add('wrong');
+      feedback.style.color = 'var(--red)';
+      feedback.textContent = `✗ Falsche Auswahl. -${ESCAPE_ROOM_CONFIG.scoring.errorPenalty} Punkte. Versucht es erneut.`;
+      document.getElementById('confirm-btn').disabled = true;
+      selectedId = null;
+      setTimeout(() => {
+        tile?.classList.remove('wrong');
+        feedback.textContent = '';
+      }, 1500);
+    }
+  };
+}
+
+// ── Challenge 4: PDF ─────────────────────────────────────
+function renderPdf(ch) {
+  document.getElementById('challenge-content').innerHTML = `
+    ${buildProgressBar()}
+    <div class="card slide-in">
+      <div class="challenge-meta">CHALLENGE 4 / ${ESCAPE_ROOM_CONFIG.challenges.length} &nbsp;·&nbsp; FINAL</div>
+      <div class="challenge-title">${escHtml(ch.title)}</div>
+      <p class="instructions">${escHtml(ch.instructions)}</p>
+
+      <div style="margin-bottom:24px">
+        <a href="${escHtml(ch.pdfSrc)}" download class="btn btn-cyan" style="text-decoration:none;display:inline-flex">
+          ⬇&nbsp; Marktbericht herunterladen (PDF)
+        </a>
+      </div>
+
+      <div class="section-label" style="margin-bottom:8px">Die 3 erfundenen Jahreszahlen</div>
+      <input
+        id="years-input"
+        class="input-field"
+        type="text"
+        placeholder="z.B. 2018, 2021, 2024"
+        autocomplete="off"
+        style="margin-bottom:12px"
+      />
+      <div style="color:var(--gray);font-size:12px;margin-bottom:16px">
+        Kommagetrennt eingeben — Reihenfolge egal
+      </div>
+      <div id="years-feedback" style="min-height:20px;font-size:13px;margin-bottom:12px"></div>
+      <button id="verify-btn" class="btn btn-primary btn-full">▶&nbsp; Verifizieren</button>
+    </div>
+  `;
+
+  const input    = document.getElementById('years-input');
+  const feedback = document.getElementById('years-feedback');
+
+  document.getElementById('verify-btn').addEventListener('click', () => submitYears());
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') submitYears(); });
+
+  function submitYears() {
+    const val = input.value;
+    if (!val.trim()) return;
+    if (validateYears(val, ch.solution)) {
+      input.classList.add('success');
+      feedback.style.color = 'var(--green)';
+      feedback.textContent = '✓ Korrekt! Mission abgeschlossen. Ergebnis wird berechnet...';
+      document.getElementById('verify-btn').disabled = true;
+      setTimeout(() => finishGame(), 1500);
+    } else {
+      applyError();
+      input.classList.add('error');
+      feedback.style.color = 'var(--red)';
+      feedback.textContent = `✗ Falsche Antwort. -${ESCAPE_ROOM_CONFIG.scoring.errorPenalty} Punkte.`;
+      setTimeout(() => {
+        input.classList.remove('error');
+        feedback.textContent = '';
+      }, 1500);
+      input.value = '';
+    }
+  }
+}
+
 // ── Init ─────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   loadState();
