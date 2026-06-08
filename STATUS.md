@@ -25,10 +25,8 @@ State-Architektur: zentrales State-Objekt, bei jeder Änderung in localStorage g
 
 ## Aktueller Status
 - [x] Design-Spec erstellt: `docs/superpowers/specs/2026-06-08-ai-escape-room-design.md`
-- [ ] Design-Review durch Spielleiter
-- [ ] Implementierungsplan (writing-plans)
-- [ ] Implementation
-- [ ] Assets einpflegen (CustomGPT-Links, Audio, Bilder, PDF)
+- [x] Implementierung abgeschlossen (14 Tasks, 10 Git-Commits)
+- [ ] Assets einpflegen (CustomGPT-Links in ESCAPE_ROOM_CONFIG, challenge2.mp3, 12× Deepfake-Bilder, challenge4.pdf)
 - [ ] GitHub Pages Deployment
 
 ## Offene Punkte
