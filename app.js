@@ -260,6 +260,32 @@ function showModal(html, onConfirm, onCancel) {
   });
 }
 
+// ── Lightbox (Challenge 3 image zoom) ───────────────────
+function openLightbox(src, label) {
+  const backdrop = document.createElement('div');
+  backdrop.className = 'lightbox-backdrop';
+  backdrop.innerHTML = `
+    <button class="lightbox-close" aria-label="Schliessen">✕</button>
+    <img class="lightbox-img" src="${escHtml(src)}" alt="${escHtml(label)}" />
+    <div class="lightbox-caption">${escHtml(label)}</div>
+  `;
+
+  function close() {
+    backdrop.remove();
+    document.removeEventListener('keydown', onKeydown);
+  }
+  function onKeydown(e) {
+    if (e.key === 'Escape') close();
+  }
+
+  backdrop.addEventListener('click', (e) => {
+    if (e.target === backdrop || e.target.closest('.lightbox-close')) close();
+  });
+  document.addEventListener('keydown', onKeydown);
+
+  document.body.appendChild(backdrop);
+}
+
 // ── Router ───────────────────────────────────────────────
 function render() {
   const start = document.getElementById('view-start');
@@ -689,6 +715,14 @@ function renderDeepfake(ch) {
         ${round.images.map(img => `
           <div class="image-tile" data-id="${escHtml(img.id)}" onclick="selectImage('${escHtml(img.id)}')">
             <img src="${escHtml(img.src)}" alt="${escHtml(img.label)}" draggable="false" />
+            <div class="tile-actions">
+              <button class="zoom-btn" onclick="event.stopPropagation(); openLightbox('${escHtml(img.src)}', '${escHtml(img.label)}')" title="Vergrössern">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16" y2="16"></line></svg>
+              </button>
+              <a class="download-btn" href="${escHtml(img.src)}" download="${escHtml(img.src.split('/').pop())}" onclick="event.stopPropagation()" title="Herunterladen">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              </a>
+            </div>
             <div class="tile-label">${escHtml(img.label)}</div>
           </div>
         `).join('')}
