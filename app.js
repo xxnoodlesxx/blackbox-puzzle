@@ -145,7 +145,7 @@ const ESCAPE_ROOM_CONFIG = {
       instructions: 'Ihr erhaltet einen 30-seitigen KI-generierten Marktbericht. Er enthält 3 bewusst falsch eingebaute Jahreszahlen (Halluzinationen). Das Dokument ist zu lang zum manuellen Lesen — nutzt KI-Tools (NotebookLM, Claude, ChatGPT Data Analysis) um es systematisch gegen das Live-Web zu prüfen. Gebt die 3 erfundenen Jahreszahlen kommagetrennt ein (Reihenfolge egal).',
       type: 'pdf',
       pdfSrc: 'assets/docs/challenge4.pdf',
-      solution: ['2018', '2021', '2024'],
+      solution: ['1999', '2003', '2008'],
       hints: [
         'Nicht alle Fakten im Dokument sind korrekt — eine KI kann gezielt nach Widersprüchen suchen.',
         'Fragt das KI-Tool explizit: "Welche Jahreszahlen in diesem Dokument widersprechen nachweisbaren historischen Fakten?" — und lasst es die Quellen prüfen.',
