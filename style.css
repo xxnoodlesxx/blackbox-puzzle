@@ -161,6 +161,40 @@ audio {
 }
 .image-tile.selected .tile-label { color: var(--cyan); }
 
+.tile-actions {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+.zoom-btn,
+.download-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(0,0,0,0.6);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  color: var(--green);
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+}
+.zoom-btn:hover,
+.download-btn:hover {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.zoom-btn svg,
+.download-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* ── Hint ───────────────────────────────────────────────── */
 #hint-area {
   max-width: var(--max-w);
@@ -211,6 +245,42 @@ audio {
 .modal-title   { color: var(--cyan); font-size: 16px; margin-bottom: 12px; }
 .modal-body    { color: #ccc; font-size: 14px; line-height: 1.6; margin-bottom: 20px; font-family: 'Segoe UI', sans-serif; }
 .modal-actions { display: flex; gap: 12px; justify-content: flex-end; }
+
+/* ── Lightbox (Challenge 3 image zoom) ─────────────────── */
+.lightbox-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+}
+.lightbox-img {
+  max-width: 95vw;
+  max-height: 90vh;
+  object-fit: contain;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.lightbox-caption {
+  margin-top: 10px;
+  color: var(--gray);
+  font-size: 13px;
+}
+.lightbox-close {
+  position: fixed;
+  top: 16px;
+  right: 24px;
+  background: none;
+  border: none;
+  color: var(--green);
+  font-size: 28px;
+  cursor: pointer;
+  line-height: 1;
+}
+.lightbox-close:hover { color: var(--cyan); }
 
 /* ── Startscreen ────────────────────────────────────────── */
 #view-start {
