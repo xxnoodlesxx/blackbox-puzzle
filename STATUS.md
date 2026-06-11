@@ -29,8 +29,8 @@ State-Architektur: zentrales State-Objekt, bei jeder Änderung in localStorage g
 - [x] Challenge 3: alle 12 Deepfake-Bilder vorhanden, Runde 1 Lösung korrigiert (Bild C)
 - [x] Challenge 3: Bild-Zoom/Download-Lightbox-Feature portiert
 - [x] Challenge 4: PDF + korrigierte Lösungsjahre vorhanden
-- [ ] Challenge 2: `assets/audio/challenge2.mp3` fehlt noch (Suno-Song erstellen)
+- [x] Challenge 2: `assets/audio/challenge2.mp3` (Suno-Song) eingepflegt
 - [ ] GitHub Pages Deployment
 
 ## Offene Punkte
-`assets/audio/challenge2.mp3` muss noch erstellt werden (CEO-Rede als Mandarin-Song, Suno-Generierung) — einziges fehlendes Asset.
+Alle Spiel-Assets sind vorhanden. Offen: GitHub Pages Deployment einrichten/prüfen.
