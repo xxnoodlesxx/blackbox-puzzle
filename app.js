@@ -92,11 +92,11 @@ const ESCAPE_ROOM_CONFIG = {
             { id: 'c', src: 'assets/images/c3-r1-c.jpg', label: 'Bild C' },
             { id: 'd', src: 'assets/images/c3-r1-d.jpg', label: 'Bild D' },
           ],
-          solution: 'b',
-          explanation: 'KI-Fehler in Bild B: 6 Finger an der linken Hand und eine physikalisch unmögliche Schattenrichtung.',
+          solution: 'c',
+          explanation: 'KI-Fehler in Bild C: Ein halbes Weinglas schwebt zwischen den Händen der Personen. Zwei der Personen halten dasselbe Weinglas.',
           hints: [
-            'KI-Modelle haben bekannte Schwächen bei bestimmten Körperteilen — schaut genau hin.',
-            'Zählt die Finger auf allen sichtbaren Händen — und prüft, ob die Schatten zur selben Lichtquelle passen.',
+            'Was ist nur mit diesen Gläsern los?',
+            'Zählt die Weingläser in der Bildmitte — schwebt da eines zu viel zwischen den Händen, das eigentlich niemand hält?',
           ],
         },
         {
